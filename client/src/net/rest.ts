@@ -1,10 +1,13 @@
 import type { GameId, LeaderboardEntry, ShopItem, UserProfile } from "../../../shared/src/types";
 import { saveSession, session, updateUser } from "../state";
 
+/** Empty in web builds (same origin); set VITE_SERVER_URL for Capacitor/native builds. */
+const BASE = (import.meta.env.VITE_SERVER_URL as string | undefined)?.replace(/\/$/, "") ?? "";
+
 async function req<T>(path: string, init?: RequestInit): Promise<T> {
   const headers: Record<string, string> = { "Content-Type": "application/json" };
   if (session.token) headers.Authorization = `Bearer ${session.token}`;
-  const res = await fetch(`/api${path}`, { ...init, headers });
+  const res = await fetch(`${BASE}/api${path}`, { ...init, headers });
   if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? `http_${res.status}`);
   return res.json() as Promise<T>;
 }

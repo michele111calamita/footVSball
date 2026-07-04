@@ -10,9 +10,12 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@capacitor/android": "^8.4.1",
+    "@capacitor/core": "^8.4.1",
     "colyseus.js": "^0.15.26"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.4.1",
     "typescript": "^5.7.2",
     "vite": "^6.0.0"
   }

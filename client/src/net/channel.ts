@@ -16,6 +16,9 @@ export interface GameChannel {
 }
 
 function wsEndpoint(): string {
+  // Native (Capacitor) builds talk to a remote server; web builds use same origin.
+  const remote = import.meta.env.VITE_SERVER_URL as string | undefined;
+  if (remote) return remote.replace(/\/$/, "").replace(/^http/, "ws");
   if (import.meta.env.DEV) return `ws://${location.hostname}:${SERVER_PORT}`;
   return `${location.protocol === "https:" ? "wss" : "ws"}://${location.host}`;
 }
@@ -23,10 +26,29 @@ function wsEndpoint(): string {
 export class ColyseusChannel implements GameChannel {
   private constructor(private room: Room) {}
 
+  /** Room ID — shown as the invite code for friend challenges. */
+  get roomId(): string {
+    return this.room.roomId;
+  }
+
   static async join(gameId: GameId, vsBot: boolean): Promise<ColyseusChannel> {
     const client = new Client(wsEndpoint());
     const opts = { token: session.token, vsBot };
     const room = vsBot ? await client.create(gameId, opts) : await client.joinOrCreate(gameId, opts);
+    return new ColyseusChannel(room);
+  }
+
+  /** Create a private friend-challenge room (no bot fallback). */
+  static async createPrivate(gameId: GameId): Promise<ColyseusChannel> {
+    const client = new Client(wsEndpoint());
+    const room = await client.create(gameId, { token: session.token, privateMatch: true });
+    return new ColyseusChannel(room);
+  }
+
+  /** Join a friend's room by invite code. */
+  static async joinByCode(code: string): Promise<ColyseusChannel> {
+    const client = new Client(wsEndpoint());
+    const room = await client.joinById(code, { token: session.token });
     return new ColyseusChannel(room);
   }
 

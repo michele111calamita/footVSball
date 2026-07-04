@@ -122,10 +122,29 @@ async function subbuteoVsBot(token: string): Promise<void> {
   room.leave();
 }
 
+async function friendChallenge(tokenA: string, tokenB: string): Promise<void> {
+  const cA = new Client(WS);
+  const cB = new Client(WS);
+  const roomA = await cA.create("penalty", { token: tokenA, privateMatch: true });
+  const startA = waitMsg<any>(roomA, "match_start", 15000);
+  // The invite code is the room ID.
+  const roomB = await cB.joinById(roomA.roomId, { token: tokenB });
+  const startB = waitMsg<any>(roomB, "match_start", 15000);
+  const [sA, sB] = await Promise.all([startA, startB]);
+  check("friend challenge: joined by code", roomB.roomId === roomA.roomId);
+  check("friend challenge: both human (no bot)", !sA.players[0].isBot && !sA.players[1].isBot);
+  check("friend challenge: seats 0/1", sA.youAre !== sB.youAre);
+  roomA.leave();
+  roomB.leave();
+  await new Promise((r) => setTimeout(r, 500));
+}
+
 (async () => {
   const a = await rest<any>("/auth/guest", { name: "SmokeA" });
   const b = await rest<any>("/auth/guest", { name: "SmokeB" });
   check("guest auth", !!a.token && !!b.token);
+
+  await friendChallenge(a.token, b.token);
 
   const coinsBefore = a.user.coins;
   await penaltyVsBot(a.token);

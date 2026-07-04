@@ -20,9 +20,7 @@ primary_region = "ams"
   size = "shared-cpu-1x"
   memory = "512mb"
 
-# Profili/valute persistenti tra deploy (opzionale ma consigliato):
-#   fly volumes create fvb_data --size 1 --region ams
-# poi decommenta:
-# [mounts]
-#   source = "fvb_data"
-#   destination = "/app/data"
+# Profili/valute persistenti tra deploy (volume creato: vol_rkg5oyzy9jy69xy4)
+[mounts]
+  source = "fvb_data"
+  destination = "/app/data"

@@ -31,9 +31,14 @@ Errori: `{ "error": "<codice>" }` con status 4xx. Rate limit: 120 req/min per IP
 Room disponibili: `penalty`, `subbuteo`. Join:
 
 ```ts
-client.joinOrCreate("penalty", { token });          // matchmaking (bot dopo 6s)
-client.create("penalty", { token, vsBot: true });   // partita privata vs bot
+client.joinOrCreate("penalty", { token });                 // matchmaking (bot dopo 6s)
+client.create("penalty", { token, vsBot: true });          // partita privata vs bot
+client.create("penalty", { token, privateMatch: true });   // sfida amico: niente bot,
+                                                           // room.roomId = codice invito
+client.joinById(codice, { token });                        // l'amico entra col codice
 ```
+
+Le room `privateMatch` aspettano l'ospite fino a 10 minuti, poi si chiudono.
 
 ### Messaggi comuni (server → client)
 

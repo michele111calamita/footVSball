@@ -30,15 +30,24 @@ export abstract class BaseMatchRoom extends Room {
     return user;
   }
 
-  override onCreate(options: { vsBot?: boolean }): void {
+  override onCreate(options: { vsBot?: boolean; privateMatch?: boolean }): void {
     this.setSeatReservationTime(10);
-    if (options?.vsBot) this.setPrivate(true);
+    if (options?.vsBot || options?.privateMatch) this.setPrivate(true);
 
     this.onMessage("*", (client, type, message) => {
       if (!this.throttle(client)) return;
       if (this.ended) return;
       this.handleGameMessage(client, String(type), message);
     });
+
+    if (options?.privateMatch) {
+      // Friend challenge: no bot — wait for the invited player, but don't
+      // keep the room alive forever if nobody shows up.
+      this.botTimer = setTimeout(() => {
+        if (!this.started) this.disconnect();
+      }, 10 * 60_000);
+      return;
+    }
 
     // Bot fallback so nobody waits forever in the queue.
     const wait = options?.vsBot ? 400 : MATCHMAKING_BOT_FALLBACK_MS;
