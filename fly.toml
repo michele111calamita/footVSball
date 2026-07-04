@@ -1,6 +1,6 @@
 # Fly.io — footVSball
 # Deploy: fly launch --copy-config --no-deploy && fly deploy
-app = "footvsball"
+app = "footvsball-mc"
 primary_region = "ams"
 
 [build]
