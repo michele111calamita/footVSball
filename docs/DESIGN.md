@@ -45,6 +45,16 @@ Font caricati da Google Fonts con fallback di sistema (offline-safe).
 
 `prefers-reduced-motion` disattiva le animazioni.
 
+## Scena Rigori (canvas)
+
+Direzione: **cartoon juicy** — proporzioni buffe (testa ~30% del corpo), colori saturi, esagerazione teatrale.
+
+- **Stadio**: cielo crepuscolo, sagoma copertura, riflettori pulsanti, folla a due anelli animata (bob per colonna + flash fotocamere), tabelloni sponsor stilizzati, erba con strisce prospettiche, righe area di rigore, vignette che concentra lo sguardo sulla porta.
+- **Personaggi**: portiere cartoon (crouch idle con oscillazione, occhi che seguono la palla, tuffo completo con corpo ruotato e guanti oversized verso la zona), tiratore con maglia "10", rincorsa e calcio con follow-through.
+- **Palla & VFX**: toppe rotanti nel colore secondario della skin (spin leggibile), squash al calcio, scia in volo, rete che si gonfia sull'impatto, particelle per esito (coriandoli gol / polvere parata / scintille palo), screen shake sugli apici.
+- La porta si adatta sia in larghezza sia in altezza (traversa sempre visibile su viewport wide).
+- Tutti gli effetti rispettano `prefers-reduced-motion` (niente shake/particelle/bob).
+
 ## Accessibilità
 
 - Contrasto testo/CTA verificato su sfondi verdi scuri (bianco/quasi-nero su arancio).

@@ -1,0 +1,9 @@
+{
+  "framework": "vite",
+  "files": ["client/index.html"],
+  "insertBefore": "</head>",
+  "commentSyntax": "html",
+  "devServer": "npm run dev:client",
+  "url": "http://localhost:5173",
+  "cspChecked": true
+}
