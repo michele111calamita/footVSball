@@ -12,10 +12,12 @@ import type { Body2D, Disc, FlickMsg, SubbuteoState } from "./types";
 export function initialState(): SubbuteoState {
   const W = C.FIELD_W, H = C.FIELD_H;
   const discs: Disc[] = [];
-  // 1 back (keeper-ish) + 3 forwards per team, mirrored.
+  // 1 back (keeper-ish) + 3 defenders + 3 midfielders + 1 forward per team, mirrored.
   const layout: [number, number][] = [
-    [W / 2, H - 60],
-    [W * 0.25, H - 260], [W * 0.5, H - 320], [W * 0.75, H - 260],
+    [W / 2, H - 60], // Keeper
+    [W * 0.2, H - 180], [W * 0.5, H - 180], [W * 0.8, H - 180], // Defenders
+    [W * 0.25, H - 300], [W * 0.5, H - 320], [W * 0.75, H - 300], // Midfielders
+    [W * 0.5, H - 410], // Striker
   ];
   for (const [x, y] of layout) discs.push(mkDisc(x, y, 0));
   for (const [x, y] of layout) discs.push(mkDisc(W - x, H - y, 1));

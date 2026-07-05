@@ -105,14 +105,14 @@ async function subbuteoVsBot(token: string): Promise<void> {
   const start = await waitMsg<any>(room, "match_start", 10000);
   check("subbuteo vsBot: match_start", start.players?.[1]?.isBot === true);
   const board = await waitMsg<any>(room, "board", 10000);
-  check("subbuteo vsBot: board has 8 discs", board.discs?.length === 8);
+  check("subbuteo vsBot: board has 16 discs", board.discs?.length === 16);
 
   let snaps = 0;
   room.onMessage("snap", () => snaps++);
   const flickOk = waitMsg<any>(room, "flick_ok", 30000);
   room.onMessage("turn", (msg: any) => {
     if (msg.team === start.youAre) {
-      const disc = start.youAre === 0 ? 1 : 5;
+      const disc = start.youAre === 0 ? 1 : 9;
       setTimeout(() => room.send("flick", { disc, dx: 0.1, dy: start.youAre === 0 ? -0.9 : 0.9 }), 300);
     }
   });

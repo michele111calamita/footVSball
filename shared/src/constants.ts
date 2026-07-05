@@ -20,7 +20,7 @@ export const SUBBUTEO = {
   DISC_R: 17,
   BALL_M: 1,
   DISC_M: 3.2,
-  DISCS_PER_TEAM: 4,
+  DISCS_PER_TEAM: 8,
   /** Per-frame velocity retain factor at 60fps (cloth friction). */
   FRICTION: 0.982,
   WALL_RESTITUTION: 0.78,
