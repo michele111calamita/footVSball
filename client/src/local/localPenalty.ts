@@ -80,7 +80,9 @@ export class LocalPenaltyChannel extends LocalChannelBase {
       kicksTaken: [...this.kicksTaken] as [number, number],
     };
     this.emit("result", msg);
-    this.after(result.flightMs + PENALTY.RESULT_PAUSE_MS, () => {
+    const spectacular = (result.outcome === "goal" || result.outcome === "saved") && result.shot.power > 0.65;
+    const pauseMs = spectacular ? 6500 : PENALTY.RESULT_PAUSE_MS;
+    this.after(result.flightMs + pauseMs, () => {
       if (this.isDecided()) {
         const winnerIdx = this.score[0] > this.score[1] ? 0 : 1;
         this.emit("match_end", { winnerIdx, score: this.score, reason: "finished", rewards: null });

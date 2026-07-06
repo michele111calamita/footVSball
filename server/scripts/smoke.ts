@@ -39,21 +39,30 @@ function check(name: string, cond: boolean): void {
 
 async function penaltyVsBot(token: string): Promise<void> {
   const client = new Client(WS);
+  console.log("smoke: creating penalty room vsBot...");
   const room = await client.create("penalty", { token, vsBot: true });
+  console.log("smoke: waiting for match_start...");
   const start = await waitMsg<any>(room, "match_start", 10000);
   check("penalty vsBot: match_start", start.players?.[1]?.isBot === true);
 
   const endP = waitMsg<any>(room, "match_end", 180000);
   room.onMessage("phase", (msg: any) => {
+    console.log("smoke: phase received", msg.kickIndex, "shooter", msg.shooterIdx);
     if (msg.shooterIdx === start.youAre) {
+      console.log("smoke: sending shoot");
       setTimeout(() => room.send("shoot", { tx: 0.7, ty: 0.6, power: 0.7, curve: 0.1 }), 300);
     } else {
+      console.log("smoke: sending dive");
       setTimeout(() => room.send("dive", { col: -1, row: 0 }), 300);
     }
   });
   let results = 0;
-  room.onMessage("result", () => results++);
+  room.onMessage("result", (msg: any) => {
+    results++;
+    console.log("smoke: result received", results, msg.outcome);
+  });
   const end = await endP;
+  console.log("smoke: match_end received", end.winnerIdx);
   check("penalty vsBot: match_end", typeof end.winnerIdx === "number");
   // Shootouts can legally end early once the margin is unreachable.
   check("penalty vsBot: >=6 kicks resolved", results >= 6);

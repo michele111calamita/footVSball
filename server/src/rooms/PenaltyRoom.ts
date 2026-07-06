@@ -117,6 +117,9 @@ export class PenaltyRoom extends BaseMatchRoom {
     };
     this.broadcastMsg("result", msg);
 
+    const spectacular = (result.outcome === "goal" || result.outcome === "saved") && result.shot.power > 0.65;
+    const pauseMs = spectacular ? 6500 : PENALTY.RESULT_PAUSE_MS;
+
     this.clock.setTimeout(() => {
       if (this.isDecided()) {
         const winner = this.score[0] > this.score[1] ? 0 : 1;
@@ -125,7 +128,7 @@ export class PenaltyRoom extends BaseMatchRoom {
         this.kickIndex++;
         this.nextKick();
       }
-    }, result.flightMs + PENALTY.RESULT_PAUSE_MS);
+    }, result.flightMs + pauseMs);
   }
 
   /** Standard shootout math: decided early if unreachable, else after even kicks. */
